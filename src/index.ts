@@ -23,6 +23,8 @@ Bun.serve({
 
       const wordStrings = toWordsWithSeparators(text);
 
+      console.log(`tokenize "${text}" -> ${wordStrings.join(", ")}`);
+
       return new Response(JSON.stringify(wordStrings), {
         headers: {
           "Content-Type": "application/json",
@@ -41,6 +43,15 @@ Bun.serve({
       const lemmatized = await lemmatizeJapaneseSentences(sentences, {
         onError,
       });
+
+      for (const i in sentences.keys()) {
+        const sentence = sentences[i];
+        const lemmatizedSentence = lemmatized[i];
+
+        console.log(
+          `lemmatize "${sentence}" -> ${lemmatizedSentence.join(", ")}`
+        );
+      }
 
       return new Response(JSON.stringify(lemmatized), {
         headers: {
