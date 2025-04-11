@@ -15,9 +15,13 @@ Bun.serve({
     "/healthcheck": new Response("OK"),
 
     "/to-word-strings": async (req) => {
-      const sentence = z.string().parse(await req.json());
+      const { text } = z
+        .object({
+          text: z.string(),
+        })
+        .parse(await req.json());
 
-      const wordStrings = toWordsWithSeparators(sentence);
+      const wordStrings = toWordsWithSeparators(text);
 
       return new Response(JSON.stringify(wordStrings), {
         headers: {
