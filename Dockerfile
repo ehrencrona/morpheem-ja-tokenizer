@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package.json .
 COPY package-lock.json .
-RUN npm ci
+RUN bun install
 
 COPY . .
 
