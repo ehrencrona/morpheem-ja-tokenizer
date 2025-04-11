@@ -25,7 +25,7 @@ Bun.serve({
 
       console.log(`tokenize "${text}" -> ${wordStrings.join(", ")}`);
 
-      return new Response(JSON.stringify(wordStrings), {
+      return new Response(JSON.stringify({ segments: wordStrings }), {
         headers: {
           "Content-Type": "application/json",
         },
