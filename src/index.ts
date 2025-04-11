@@ -44,7 +44,7 @@ Bun.serve({
         onError,
       });
 
-      for (const i in sentences.keys()) {
+      for (const i of sentences.keys()) {
         const sentence = sentences[i];
         const lemmatizedSentence = lemmatized[i];
 
