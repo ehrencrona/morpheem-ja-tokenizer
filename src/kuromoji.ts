@@ -151,7 +151,7 @@ export function isKatakana(str: string): boolean {
   return katakanaRegex.test(str);
 }
 
-export function isLatinWord(str: string): boolean {
+export function isLatin(str: string): boolean {
   return /^[\p{Script=Latin}\p{M}\d]+(?:[.'’\-][\p{Script=Latin}\p{M}\d]+)*$/u.test(
     str
   );
