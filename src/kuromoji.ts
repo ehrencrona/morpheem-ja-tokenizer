@@ -150,3 +150,9 @@ export function isKatakana(str: string): boolean {
   const katakanaRegex = /^[ァ-ンヴー]+$/;
   return katakanaRegex.test(str);
 }
+
+export function isLatinWord(str: string): boolean {
+  return /^[\p{Script=Latin}\p{M}\d]+(?:[.'’\-][\p{Script=Latin}\p{M}\d]+)*$/u.test(
+    str
+  );
+}

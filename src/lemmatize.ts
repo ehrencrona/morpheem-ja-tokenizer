@@ -3,6 +3,7 @@ import {
   isJapaneseSeparator,
   isJapaneseSuffix,
   isKatakana,
+  isLatin,
   tokenizeJapanese,
 } from "./kuromoji";
 
@@ -14,9 +15,9 @@ export async function lemmatizeJapaneseSentences(
     onError?: "useword" | "throw" | "returnempty";
   }
 ) {
-  let lastWord: string;
-
   return sentences.map((sentence) => {
+    let lastWord: string;
+
     return filterUndefineds(
       tokenizeJapanese(sentence).map((token) => {
         if (isJapaneseSeparator(token)) {
@@ -34,12 +35,14 @@ export async function lemmatizeJapaneseSentences(
         lastWord = token.basic_form;
 
         if (token.word_type == "UNKNOWN") {
-          if (isKatakana(token.surface_form)) {
+          if (isKatakana(token.surface_form) || isLatin(token.surface_form)) {
             return token.surface_form;
           }
 
           if (onError == "throw") {
-            throw new Error(`Unknown word: ${token.surface_form}`);
+            throw new Error(
+              `Unknown word: ${token.surface_form} in sentence: ${sentence}`
+            );
           } else if (onError == "useword") {
             lastWord = token.surface_form;
           } else if (onError == "returnempty") {
