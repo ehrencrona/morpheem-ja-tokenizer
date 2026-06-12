@@ -1,7 +1,7 @@
 import { initializeKuromoji } from "./kuromoji";
 import { lemmatizeJapaneseSentences } from "./lemmatize";
 import { z } from "zod";
-import { toWordsWithSeparators } from "./toWordsWithSeparators";
+import { toWordPairs, toWordsWithSeparators } from "./toWordsWithSeparators";
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
@@ -33,12 +33,33 @@ Bun.serve({
     },
 
     "/lemmatize": async (req) => {
-      const { sentences, onError } = z
+      const { sentences, onError, withWords } = z
         .object({
           sentences: z.array(z.string()),
           onError: z.enum(["throw", "useword", "returnempty"]).optional(),
+          withWords: z.boolean().optional(),
         })
         .parse(await req.json());
+
+      if (withWords) {
+        const pairs = sentences.map((sentence) => toWordPairs(sentence));
+
+        for (const i of sentences.keys()) {
+          console.log(
+            `lemmatize with words "${sentences[i]}" -> ${pairs[i]
+              .map(({ word, lemma }) =>
+                lemma == null ? `[${word}]` : lemma == word ? word : `${word} (${lemma})`
+              )
+              .join(", ")}`
+          );
+        }
+
+        return new Response(JSON.stringify(pairs), {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+      }
 
       const lemmatized = await lemmatizeJapaneseSentences(sentences, {
         onError,
